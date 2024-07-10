@@ -3,15 +3,23 @@ package com.charter.reward.db.dto;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import jakarta.validation.constraints.NotNull;
+
 public class Transaction {
 	private Long id;
 
 	private String comments;
-	private BigDecimal  amount;
+
+	@NotNull(message = "The graduation date is required.")
+	private BigDecimal amount;
+
 	private LocalDateTime transactionDate;
+
+	@NotNull(message = "The graduation date is required.")
 	private Long customerId;
-	private Integer  rewardPoints;
-	
+
+	private Integer rewardPoints;
+
 	/**
 	 * @return the comments
 	 */
@@ -89,7 +97,5 @@ public class Transaction {
 	public void setRewardPoints(Integer rewardPoints) {
 		this.rewardPoints = rewardPoints;
 	}
-
-	
 
 }

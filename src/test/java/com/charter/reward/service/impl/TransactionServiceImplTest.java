@@ -80,7 +80,6 @@ public class TransactionServiceImplTest {
 
 	@Test
 	void getTransactionsByCustomerId__thenThrowException() throws ResourceNotFoundException {
-		Optional<CustomerTransaction> tx = Optional.empty();
 		when(transactionRepository.findTransactionsByCustomerId(1L)).thenReturn(null);
 		assertThrows(ResourceNotFoundException.class, () -> {
 			transactionServiceImpl.getTransactionsByCustomerId(1L);

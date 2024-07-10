@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.charter.reward.db.dto.Customer;
 import com.charter.reward.service.CustomerService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/v1/customers")
 public class CustomerController {
@@ -23,8 +25,8 @@ public class CustomerController {
 	public CustomerService customerService;
 
 	@PostMapping("/register")
-	public ResponseEntity<Customer> createCustomerAccount(@RequestBody Customer customer) {
-		logger.info("Fetches All Reward Points Summary"+customer);
+	public ResponseEntity<Customer> createCustomerAccount(@Valid @RequestBody Customer customer) {
+		logger.info("Registers customer");
 		return new ResponseEntity<>(customerService.createCustomerAccount(customer), HttpStatus.OK);
 	}
 
