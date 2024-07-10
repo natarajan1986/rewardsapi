@@ -14,8 +14,9 @@ import com.charter.reward.service.CustomerService;
 @Service
 public class CustomerServiceImpl implements CustomerService {
 
-	public CustomerServiceImpl(CustomerMapper customerMapper) {
+	public CustomerServiceImpl(CustomerMapper customerMapper,CustomerRepository customerRepository) {
 		this.customerMapper = customerMapper;
+		this.customerRepository = customerRepository;
 	}
 
 	private CustomerMapper customerMapper;

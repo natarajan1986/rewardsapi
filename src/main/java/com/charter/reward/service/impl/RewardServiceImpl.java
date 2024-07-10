@@ -25,8 +25,12 @@ import jakarta.persistence.Tuple;
 @Service
 public class RewardServiceImpl implements RewardService {
 
-	public RewardServiceImpl(CustomerRewardMapper rewardMapper) {
+	public RewardServiceImpl(CustomerRewardMapper rewardMapper, TransactionRepository transactionRepository,
+			CustomerRewardRepository rewardRepository, CustomerRepository customerRepository) {
 		this.rewardMapper = rewardMapper;
+		this.transactionRepository = transactionRepository;
+		this.rewardRepository = rewardRepository;
+		this.customerRepository = customerRepository;
 	}
 
 	private CustomerRewardMapper rewardMapper;
@@ -68,9 +72,9 @@ public class RewardServiceImpl implements RewardService {
 	@Transactional("rewardTransactionsManager")
 	public List<RewardsSummaryDTO> updateCustomerRewardsSummary() {
 		List<Tuple> transactionList = transactionRepository.findCustomerRewardSummary();
-		List<RewardsSummaryDTO> rewardSummaryDTOs = convertTupleToDTO(transactionList);
-		if (CollectionUtils.isEmpty(rewardSummaryDTOs))
+		if (CollectionUtils.isEmpty(transactionList))
 			throw new ResourceNotFoundException("Resource not found ");
+		List<RewardsSummaryDTO> rewardSummaryDTOs = convertTupleToDTO(transactionList);
 		rewardSummaryDTOs.forEach(r -> {
 			CustomerRewards customerRewards = rewardRepository.findCustomerRewardPonts(r.getCustomerId(),
 					r.getMonth().trim(), r.getYear().toString());

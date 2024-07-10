@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,10 +26,15 @@ import com.charter.reward.util.RewardUtil;
 @Service
 public class TransactionServiceImpl implements TransactionService {
 
-	public TransactionServiceImpl(TransactionMapper transactionMapper) {
+	public TransactionServiceImpl(TransactionMapper transactionMapper, CustomerRepository customerRepository,
+			TransactionRepository transactionRepository) {
 		this.transactionMapper = transactionMapper;
+		this.customerRepository = customerRepository;
+		this.transactionRepository = transactionRepository;
 	}
 
+	 private static final Logger logger = LogManager.getLogger(TransactionServiceImpl.class);
+	
 	private TransactionMapper transactionMapper;
 
 	@Autowired
@@ -50,6 +57,7 @@ public class TransactionServiceImpl implements TransactionService {
 	 */
 	@Transactional("rewardTransactionsManager")
 	public Transaction createTransaction(Transaction transaction) {
+		logger.info("Create transaction for customer "+transaction);
 		validateTransaction(transaction);
 		CustomerEntity customerEntity = new CustomerEntity();
 		customerEntity = customerRepository.findById(transaction.getCustomerId()).orElseThrow();
@@ -60,7 +68,6 @@ public class TransactionServiceImpl implements TransactionService {
 		customerTransaction.setRewardPoints(RewardUtil.calculateRewardPoints(transaction.getAmount()));
 		customerTransaction.setCustomer(customerEntity);
 		customerTransaction = transactionRepository.save(customerTransaction);
-		System.out.println();
 		return transactionMapper.mapTransactionEntityToTransaction(customerTransaction);
 	}
 
@@ -90,8 +97,8 @@ public class TransactionServiceImpl implements TransactionService {
 	public Transaction getTransactionById(Long id) {
 		Optional<CustomerTransaction> tx = Optional.of(new CustomerTransaction());
 		tx = transactionRepository.findById(id);
-		if(tx.isEmpty())
-			 throw new ResourceNotFoundException("Resource not found with id: " + id);
+		if (tx.isEmpty())
+			throw new ResourceNotFoundException("Resource not found with id: " + id);
 		return transactionMapper.mapTransactionEntityToTransaction(tx.get());
 	}
 
@@ -101,11 +108,11 @@ public class TransactionServiceImpl implements TransactionService {
 	@Transactional(label = "rewardTransactionsManager", readOnly = true)
 	public List<Transaction> getTransactionsByCustomerId(Long customerId) {
 		List<CustomerTransaction> customerTransactions = transactionRepository.findTransactionsByCustomerId(customerId);
-		if(CollectionUtils.isEmpty(customerTransactions))
-			 throw new ResourceNotFoundException("Resource not found ");
+		if (CollectionUtils.isEmpty(customerTransactions))
+			throw new ResourceNotFoundException("Resource not found ");
 		List<Transaction> transactionList = customerTransactions.stream()
 				.map(transactionMapper::mapTransactionEntityToTransaction).collect(Collectors.toList());
-		System.out.println(transactionList);
+		logger.info("transaction list based on customer id "+transactionList);
 		return transactionList;
 	}
 
@@ -115,11 +122,11 @@ public class TransactionServiceImpl implements TransactionService {
 	@Transactional(label = "rewardTransactionsManager", readOnly = true)
 	public List<Transaction> getAllTransactions() {
 		List<CustomerTransaction> customerTransactions = transactionRepository.findAll();
-		if(CollectionUtils.isEmpty(customerTransactions))
-			 throw new ResourceNotFoundException("Resource not found ");
+		if (CollectionUtils.isEmpty(customerTransactions))
+			throw new ResourceNotFoundException("Resource not found ");
 		List<Transaction> transactionList = customerTransactions.stream()
 				.map(transactionMapper::mapTransactionEntityToTransaction).collect(Collectors.toList());
-		System.out.println(transactionList);
+		logger.info("transaction list based on customer id "+transactionList);
 		return transactionList;
 	}
 
