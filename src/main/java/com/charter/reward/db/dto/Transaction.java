@@ -10,12 +10,12 @@ public class Transaction {
 
 	private String comments;
 
-	@NotNull(message = "The graduation date is required.")
+	@NotNull(message = "The amount is required.")
 	private BigDecimal amount;
 
 	private LocalDateTime transactionDate;
 
-	@NotNull(message = "The graduation date is required.")
+	@NotNull(message = "The Customer Id is required.")
 	private Long customerId;
 
 	private Integer rewardPoints;
