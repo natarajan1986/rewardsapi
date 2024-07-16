@@ -4,13 +4,25 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Random;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
 /**
  * Class for performing all utility functions
  */
+@Component
 public class RewardUtil {
+
+	@Value("${reward.lowerlimit}")
+	private Integer lowerLimit;
+
+	@Value("${reward.upperlimit}")
+	private Integer upperLimit;
+
 
 	/**
 	 * Get LocalDateTime
+	 * 
 	 * @return
 	 */
 	public static LocalDateTime getCurrentLocalDateTime() {
@@ -24,31 +36,30 @@ public class RewardUtil {
 	 * @param txAmount
 	 * @return
 	 */
-	public static Integer calculateRewardPoints(BigDecimal txAmount) {
+	public Integer calculateRewardPoints(BigDecimal txAmount) {
 		int transactionAmount = txAmount.intValue();
 
 		Integer points = 0;
-		if (transactionAmount > 50 && transactionAmount <= 100) {
-			points = (transactionAmount - 50);
-		} else if (transactionAmount > 100) {
-			points = 2 * (transactionAmount - 100) + 50;
+		if (transactionAmount > lowerLimit && transactionAmount <= upperLimit) {
+			points = (transactionAmount - lowerLimit);
+		} else if (transactionAmount > upperLimit) {
+			points = 2 * (transactionAmount - upperLimit) + lowerLimit;
 		}
 		return points;
 	}
 
-	
-	public static String generateRandomAccountNumber(int length) {
-        String allowedChars = "0123456789";
-        StringBuilder accountNumber = new StringBuilder();
-        Random random = new Random();
+	public String generateRandomAccountNumber(int length) {
+		StringBuilder accountNumber = new StringBuilder();
+	    String allowedChars = "0123456789";
+		Random random = new Random();
 
-        for (int i = 0; i < length; i++) {
-            int randomIndex = random.nextInt(allowedChars.length());
-            char randomChar = allowedChars.charAt(randomIndex);
-            accountNumber.append(randomChar);
-        }
+		for (int i = 0; i < length; i++) {
+			int randomIndex = random.nextInt(allowedChars.length());
+			char randomChar = allowedChars.charAt(randomIndex);
+			accountNumber.append(randomChar);
+		}
 
-        return accountNumber.toString();
-    }
-	
+		return accountNumber.toString();
+	}
+
 }

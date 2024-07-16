@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,6 +35,8 @@ public class RewardServiceImpl implements RewardService {
 		this.customerRepository = customerRepository;
 	}
 
+	private static final Logger logger = LogManager.getLogger(RewardServiceImpl.class);
+	
 	private CustomerRewardMapper rewardMapper;
 
 	@Autowired
@@ -86,7 +90,7 @@ public class RewardServiceImpl implements RewardService {
 			}
 
 		});
-		System.out.println(rewardSummaryDTOs);
+		logger.info("Fetches All Reward Points Summary"+rewardSummaryDTOs);
 		return rewardSummaryDTOs;
 	}
 
@@ -98,7 +102,7 @@ public class RewardServiceImpl implements RewardService {
 		customerEntity = customerRepository.findById(dto.getCustomerId()).orElseThrow();
 		CustomerRewards rewardsEntity = new CustomerRewards();
 
-		rewardsEntity.setMonth(dto.getMonth());
+		rewardsEntity.setMonth(dto.getMonth().trim());
 		rewardsEntity.setYear(dto.getYear().toString());
 		rewardsEntity.setRewardPoints(Math.toIntExact(dto.getRewardPoints()));
 		rewardsEntity.setCustomer(customerEntity);

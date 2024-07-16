@@ -1,5 +1,7 @@
 package com.charter.reward.service.impl;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +20,8 @@ public class CustomerServiceImpl implements CustomerService {
 		this.customerMapper = customerMapper;
 		this.customerRepository = customerRepository;
 	}
+	
+	private static final Logger logger = LogManager.getLogger(CustomerServiceImpl.class);
 
 	private CustomerMapper customerMapper;
 
@@ -29,6 +33,7 @@ public class CustomerServiceImpl implements CustomerService {
 	 */
 	@Transactional("rewardTransactionsManager")
 	public Customer createCustomerAccount(Customer customer) {
+		logger.info("create customer account "+customer.getUsername());
 		validateCustomer(customer);
 		CustomerEntity cus = customerMapper.mapCustomerToCustomerEntity(customer);
 		CustomerEntity sCustomerEntity = customerRepository.save(cus);

@@ -27,15 +27,18 @@ import com.charter.reward.util.RewardUtil;
 public class TransactionServiceImpl implements TransactionService {
 
 	public TransactionServiceImpl(TransactionMapper transactionMapper, CustomerRepository customerRepository,
-			TransactionRepository transactionRepository) {
+			TransactionRepository transactionRepository,RewardUtil rewardUtil) {
 		this.transactionMapper = transactionMapper;
 		this.customerRepository = customerRepository;
 		this.transactionRepository = transactionRepository;
+		this.rewardUtil = rewardUtil;
 	}
 
 	 private static final Logger logger = LogManager.getLogger(TransactionServiceImpl.class);
 	
 	private TransactionMapper transactionMapper;
+	
+	private RewardUtil rewardUtil;
 
 	@Autowired
 	public CustomerRepository customerRepository;
@@ -65,7 +68,7 @@ public class TransactionServiceImpl implements TransactionService {
 		customerTransaction.setAmount(transaction.getAmount());
 		customerTransaction.setComments(transaction.getComments());
 		customerTransaction.setTransactionDate(RewardUtil.getCurrentLocalDateTime());
-		customerTransaction.setRewardPoints(RewardUtil.calculateRewardPoints(transaction.getAmount()));
+		customerTransaction.setRewardPoints(rewardUtil.calculateRewardPoints(transaction.getAmount()));
 		customerTransaction.setCustomer(customerEntity);
 		customerTransaction = transactionRepository.save(customerTransaction);
 		return transactionMapper.mapTransactionEntityToTransaction(customerTransaction);
@@ -84,7 +87,7 @@ public class TransactionServiceImpl implements TransactionService {
 		customerTransaction.setAmount(transaction.getAmount());
 		customerTransaction.setComments(transaction.getComments());
 		customerTransaction.setTransactionDate(RewardUtil.getCurrentLocalDateTime());
-		customerTransaction.setRewardPoints(RewardUtil.calculateRewardPoints(transaction.getAmount()));
+		customerTransaction.setRewardPoints(rewardUtil.calculateRewardPoints(transaction.getAmount()));
 		customerTransaction.setCustomer(customerEntity);
 		customerTransaction = transactionRepository.save(customerTransaction);
 		return transactionMapper.mapTransactionEntityToTransaction(customerTransaction);

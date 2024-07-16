@@ -18,6 +18,7 @@ public class CustomerMapper {
 	 */
 	public Customer mapCustomerEntityToCustomer(CustomerEntity customerEntity) {
 		Customer customer = new Customer();
+		customer.setId(customerEntity.getId());
 		customer.setUsername(customerEntity.getUsername());
 		customer.setPassword(customerEntity.getPassword());
 		customer.setEmail(customerEntity.getEmail());
@@ -26,12 +27,13 @@ public class CustomerMapper {
 	}
 
 	public CustomerEntity mapCustomerToCustomerEntity(Customer customer) {
+		RewardUtil rewardUtil = new RewardUtil();
 		CustomerEntity customerEntity = new CustomerEntity();
 		customerEntity.setUsername(customer.getUsername());
 		customerEntity.setPassword(customer.getPassword());
 		customerEntity.setEmail(customer.getEmail());
 		customerEntity.setPhoneNumber(customer.getPhoneNumber());
-		customerEntity.setAccountNumber(RewardUtil.generateRandomAccountNumber(10));
+		customerEntity.setAccountNumber(rewardUtil.generateRandomAccountNumber(10));
 		return customerEntity;
 	}
 }
