@@ -1,9 +1,11 @@
 package com.charter.reward.api;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -18,6 +20,8 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.charter.reward.db.dto.Customer;
+import com.charter.reward.db.entity.CustomerEntity;
+import com.charter.reward.db.repository.CustomerRepository;
 import com.charter.reward.service.CustomerService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,15 +31,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class CustomerControllerTest {
 
 	@MockBean
-	private CustomerService customerService;
+	private CustomerService testCustomerService;
 
 	@Autowired
 	MockMvc mockMvc;
 
+	@Mock
+	public CustomerRepository customerRepository;
+	
 	@Test
 	public void saveCustomer_thenReturnCustomerWith200Status() throws Exception {
 
-		when(customerService.createCustomerAccount( getCustomer())).thenReturn( getCustomer());
+		when(testCustomerService.createCustomerAccount( getCustomer())).thenReturn( getCustomer());
 		String expectedJson = mapToJson(getCustomer());
 		MockHttpServletRequestBuilder reqBuilder = MockMvcRequestBuilders.post("/v1/customers/register")
 				.contentType(MediaType.APPLICATION_JSON).content(expectedJson);
@@ -44,6 +51,8 @@ public class CustomerControllerTest {
 		MvcResult mvcResult = perform.andReturn();
 		MockHttpServletResponse response = mvcResult.getResponse();
 		assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+		assertEquals(response.getStatus(), HttpStatus.OK.value());
+		
 	}
 
 	/**
@@ -60,6 +69,18 @@ public class CustomerControllerTest {
 		return customer;
 	}
 
+	@SuppressWarnings("unused")
+	private CustomerEntity getCustomerEntity() {
+		CustomerEntity customer = new CustomerEntity();
+		customer.setId(1L);
+		customer.setUsername("raja");
+		customer.setPassword("raja");
+		customer.setEmail("raja@gmail.com");
+		customer.setPhoneNumber("8056047407");
+		return customer;
+	}
+	
+	
 	private String mapToJson(Object object) throws JsonProcessingException {
 		ObjectMapper mapper = new ObjectMapper();
 		return mapper.writeValueAsString(object);

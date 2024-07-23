@@ -1,6 +1,7 @@
 package com.charter.reward.api;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
@@ -48,6 +49,7 @@ public class CustomerTransactionControllerTest {
 		MvcResult mvcResult = perform.andReturn();
 		MockHttpServletResponse response = mvcResult.getResponse();
 		assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+		assertEquals(response.getStatus(), HttpStatus.OK.value());
 	}
 
 	@Test
@@ -61,6 +63,7 @@ public class CustomerTransactionControllerTest {
 		MvcResult mvcResult = perform.andReturn();
 		MockHttpServletResponse response = mvcResult.getResponse();
 		assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+		assertEquals(response.getStatus(), HttpStatus.OK.value());
 	}
 
 	@Test
@@ -72,6 +75,7 @@ public class CustomerTransactionControllerTest {
 		MvcResult mvcResult = perform.andReturn();
 		MockHttpServletResponse response = mvcResult.getResponse();
 		assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+		assertEquals(response.getStatus(), HttpStatus.OK.value());
 	}
 
 	@Test
@@ -83,6 +87,7 @@ public class CustomerTransactionControllerTest {
 		MvcResult mvcResult = perform.andReturn();
 		MockHttpServletResponse response = mvcResult.getResponse();
 		assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+		assertEquals(response.getStatus(), HttpStatus.OK.value());
 	}
 
 	@Test
@@ -94,6 +99,7 @@ public class CustomerTransactionControllerTest {
 		MvcResult mvcResult = perform.andReturn();
 		MockHttpServletResponse response = mvcResult.getResponse();
 		assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+		assertEquals(response.getStatus(), HttpStatus.OK.value());
 	}
 	
 	@Test
@@ -105,6 +111,7 @@ public class CustomerTransactionControllerTest {
 		MvcResult mvcResult = perform.andReturn();
 		MockHttpServletResponse response = mvcResult.getResponse();
 		assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+		assertEquals(response.getStatus(), HttpStatus.OK.value());
 	}
 	
 	

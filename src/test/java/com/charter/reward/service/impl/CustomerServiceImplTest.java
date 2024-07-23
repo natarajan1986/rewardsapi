@@ -1,6 +1,7 @@
 package com.charter.reward.service.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
@@ -37,6 +38,7 @@ public class CustomerServiceImplTest {
 		when(customerServiceImpl.createCustomerAccount(customer)).thenReturn(customer);
 		var obj = customerServiceImpl.createCustomerAccount(getCustomer());
 		assertThat(obj).isNotNull();
+		assertEquals(obj.getEmail(),"raja@gmail.com");
 
 	}
 

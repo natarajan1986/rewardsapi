@@ -30,10 +30,10 @@ import com.charter.reward.util.RewardUtil;
 public class TransactionServiceImplTest {
 
 	@Mock
-	private RewardUtil rewardUtil;
+	public RewardUtil rewardUtil;
 
 	@Mock
-	private TransactionMapper transactionMapper;
+	public TransactionMapper transactionMapper;
 
 	@Mock
 	public CustomerRepository customerRepository;
@@ -42,7 +42,7 @@ public class TransactionServiceImplTest {
 	public TransactionRepository transactionRepository;
 
 	@InjectMocks
-	TransactionServiceImpl transactionServiceImpl;
+	TransactionServiceImpl testTransactionServiceImpl;
 
 	@Test
 	void createTransaction_thenReturnObject() {
@@ -54,9 +54,9 @@ public class TransactionServiceImplTest {
 		when(transactionRepository.save(getCustomerTransaction())).thenReturn(getCustomerTransaction());
 		when(transactionMapper.mapTransactionEntityToTransaction(getCustomerTransaction()))
 				.thenReturn(getTransaction());
-		var obj = transactionServiceImpl.createTransaction(transaction);
-		assertThat(obj).isNull();
-
+		var result = testTransactionServiceImpl.createTransaction(transaction);
+		assertThat(result).isNull();
+//		verify(transactionRepository);
 	}
 
 	@Test
@@ -71,7 +71,7 @@ public class TransactionServiceImplTest {
 		when(transactionMapper.mapTransactionEntityToTransaction(getCustomerTransaction()))
 				.thenReturn(getTransaction());
 		assertThrows(BadRequestException.class, () -> {
-			transactionServiceImpl.createTransaction(transaction);
+			testTransactionServiceImpl.createTransaction(transaction);
 		});
 
 	}
@@ -88,7 +88,7 @@ public class TransactionServiceImplTest {
 		when(transactionMapper.mapTransactionEntityToTransaction(getCustomerTransaction()))
 				.thenReturn(getTransaction());
 		assertThrows(BadRequestException.class, () -> {
-			transactionServiceImpl.createTransaction(transaction);
+			testTransactionServiceImpl.createTransaction(transaction);
 		});
 
 	}
@@ -104,9 +104,9 @@ public class TransactionServiceImplTest {
 		when(transactionRepository.save(getCustomerTransaction())).thenReturn(getCustomerTransaction());
 		when(transactionMapper.mapTransactionEntityToTransaction(getCustomerTransaction()))
 				.thenReturn(getTransaction());
-		var obj = transactionServiceImpl.updateTransaction(transaction);
+		var obj = testTransactionServiceImpl.updateTransaction(transaction);
 		assertThat(obj).isNull();
-
+//		verify(transactionRepository);
 	}
 
 	@Test
@@ -114,7 +114,7 @@ public class TransactionServiceImplTest {
 		Optional<CustomerTransaction> tx = Optional.empty();
 		when(transactionRepository.findById(1L)).thenReturn(tx);
 		assertThrows(ResourceNotFoundException.class, () -> {
-			transactionServiceImpl.getTransactionById(1L);
+			testTransactionServiceImpl.getTransactionById(1L);
 		});
 
 	}
@@ -122,14 +122,14 @@ public class TransactionServiceImplTest {
 	@Test
 	void getTransactionsByCustomerId__thenReturn() {
 		when(transactionRepository.findTransactionsByCustomerId(1L)).thenReturn(getCustomerTransactions());
-		transactionServiceImpl.getTransactionsByCustomerId(1L);
+		testTransactionServiceImpl.getTransactionsByCustomerId(1L);
 	}
 
 	@Test
 	void getTransactionsByCustomerId__thenThrowException() throws ResourceNotFoundException {
 		when(transactionRepository.findTransactionsByCustomerId(1L)).thenReturn(null);
 		assertThrows(ResourceNotFoundException.class, () -> {
-			transactionServiceImpl.getTransactionsByCustomerId(1L);
+			testTransactionServiceImpl.getTransactionsByCustomerId(1L);
 		});
 
 	}
@@ -138,7 +138,7 @@ public class TransactionServiceImplTest {
 	void getAllTransactions__thenThrowException() throws ResourceNotFoundException {
 		when(transactionRepository.findAll()).thenReturn(null);
 		assertThrows(ResourceNotFoundException.class, () -> {
-			transactionServiceImpl.getAllTransactions();
+			testTransactionServiceImpl.getAllTransactions();
 		});
 
 	}
@@ -146,12 +146,12 @@ public class TransactionServiceImplTest {
 	@Test
 	void getAllTransactions__thenReturns(){
 		when(transactionRepository.findAll()).thenReturn(getCustomerTransactions());
-		transactionServiceImpl.getAllTransactions();
+		testTransactionServiceImpl.getAllTransactions();
 	}
 
 	@Test
 	void deleteTransactions__thenReturns() {
-		transactionServiceImpl.deleteTransactionById(1L);
+		testTransactionServiceImpl.deleteTransactionById(1L);
 	}
 
 	/**

@@ -1,6 +1,7 @@
 package com.charter.reward.api;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
@@ -45,6 +46,7 @@ public class RewardsControllerTest {
 		MvcResult mvcResult = perform.andReturn();
 		MockHttpServletResponse response = mvcResult.getResponse();
 		assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+		assertEquals(response.getStatus(), HttpStatus.OK.value());
 	}
 	
 	@Test
@@ -56,6 +58,7 @@ public class RewardsControllerTest {
 		MvcResult mvcResult = perform.andReturn();
 		MockHttpServletResponse response = mvcResult.getResponse();
 		assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+		assertEquals(response.getStatus(), HttpStatus.OK.value());
 	}
 	
 
@@ -68,6 +71,7 @@ public class RewardsControllerTest {
 		MvcResult mvcResult = perform.andReturn();
 		MockHttpServletResponse response = mvcResult.getResponse();
 		assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+		assertEquals(response.getStatus(), HttpStatus.OK.value());
 	}
 
 	@Test
@@ -81,6 +85,7 @@ public class RewardsControllerTest {
 		MvcResult mvcResult = perform.andReturn();
 		MockHttpServletResponse response = mvcResult.getResponse();
 		assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+		assertEquals(response.getStatus(), HttpStatus.OK.value());
 	}
 
 	private String mapToJson(Object object) throws JsonProcessingException {

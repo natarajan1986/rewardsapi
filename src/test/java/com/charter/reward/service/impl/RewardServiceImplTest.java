@@ -1,8 +1,9 @@
 package com.charter.reward.service.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
@@ -52,8 +53,12 @@ public class RewardServiceImplTest {
 
 		var customerRewards = getAllCustomerRewards();
 		when(rewardRepository.findAll()).thenReturn(customerRewards);
+		when(rewardMapper.mapCustomerRewardsToCustomerRewardsEntity(getAllCustomerRewards().get(0)))
+				.thenReturn(getAllRewardPointsDTOs().get(0));
+
 		var obj = rewardServiceImpl.getAllRewardPoints();
 		assertThat(obj).isNotNull();
+		verify(rewardRepository, atLeastOnce()).findAll();
 
 	}
 
@@ -83,8 +88,7 @@ public class RewardServiceImplTest {
 		when(rewardRepository.findRewardPointsByCustomerId(1L)).thenReturn(customerRewards);
 		var result = rewardServiceImpl.getAllRewardPointsByCustomer(1L);
 		assertThat(result).isNotNull();
-//		assertEquals(result, customerRewards);
-
+		verify(rewardRepository);
 	}
 
 	@Test
@@ -177,6 +181,7 @@ public class RewardServiceImplTest {
 	 * 
 	 * @return List<RewardsSummaryDTO>
 	 */
+	@SuppressWarnings("unused")
 	private List<RewardsSummaryDTO> getAllRewardSummaryPointsDTOs() {
 		List<RewardsSummaryDTO> rewardsSummaryDTOs = new ArrayList<>();
 		RewardsSummaryDTO rewardsSummaryDTO = new RewardsSummaryDTO();
