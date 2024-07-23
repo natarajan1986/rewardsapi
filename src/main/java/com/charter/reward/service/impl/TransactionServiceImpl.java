@@ -27,17 +27,17 @@ import com.charter.reward.util.RewardUtil;
 public class TransactionServiceImpl implements TransactionService {
 
 	public TransactionServiceImpl(TransactionMapper transactionMapper, CustomerRepository customerRepository,
-			TransactionRepository transactionRepository,RewardUtil rewardUtil) {
+			TransactionRepository transactionRepository, RewardUtil rewardUtil) {
 		this.transactionMapper = transactionMapper;
 		this.customerRepository = customerRepository;
 		this.transactionRepository = transactionRepository;
 		this.rewardUtil = rewardUtil;
 	}
 
-	 private static final Logger logger = LogManager.getLogger(TransactionServiceImpl.class);
-	
+	private static final Logger logger = LogManager.getLogger(TransactionServiceImpl.class);
+
 	private TransactionMapper transactionMapper;
-	
+
 	private RewardUtil rewardUtil;
 
 	@Autowired
@@ -60,7 +60,7 @@ public class TransactionServiceImpl implements TransactionService {
 	 */
 	@Transactional("rewardTransactionsManager")
 	public Transaction createTransaction(Transaction transaction) {
-		logger.info("Create transaction for customer "+transaction);
+		logger.info("Create transaction for customer " + transaction);
 		validateTransaction(transaction);
 		CustomerEntity customerEntity = new CustomerEntity();
 		customerEntity = customerRepository.findById(transaction.getCustomerId()).orElseThrow();
@@ -115,7 +115,7 @@ public class TransactionServiceImpl implements TransactionService {
 			throw new ResourceNotFoundException("Resource not found ");
 		List<Transaction> transactionList = customerTransactions.stream()
 				.map(transactionMapper::mapTransactionEntityToTransaction).collect(Collectors.toList());
-		logger.info("transaction list based on customer id "+transactionList);
+		logger.info("transaction list based on customer id " + transactionList);
 		return transactionList;
 	}
 
@@ -129,7 +129,7 @@ public class TransactionServiceImpl implements TransactionService {
 			throw new ResourceNotFoundException("Resource not found ");
 		List<Transaction> transactionList = customerTransactions.stream()
 				.map(transactionMapper::mapTransactionEntityToTransaction).collect(Collectors.toList());
-		logger.info("transaction list based on customer id "+transactionList);
+		logger.info("transaction list based on customer id " + transactionList);
 		return transactionList;
 	}
 

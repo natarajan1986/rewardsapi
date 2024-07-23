@@ -44,7 +44,7 @@ public class RewardsController {
 	 * @return
 	 */
 	@GetMapping("/{id}")
-	public ResponseEntity<List<CustomerRewardsDTO>> getTransactionById(@PathVariable Long id) {
+	public ResponseEntity<List<CustomerRewardsDTO>> getAllRewardPointsByCustomerId(@PathVariable Long id) {
 		logger.info("Fetches All Reward Points Summary based on customer id" +id);
 		return new ResponseEntity<List<CustomerRewardsDTO>>(rewardService.getAllRewardPointsByCustomer(id),
 				HttpStatus.OK);

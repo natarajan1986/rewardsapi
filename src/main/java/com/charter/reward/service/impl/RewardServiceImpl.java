@@ -80,6 +80,9 @@ public class RewardServiceImpl implements RewardService {
 			throw new ResourceNotFoundException("Resource not found ");
 		List<RewardsSummaryDTO> rewardSummaryDTOs = convertTupleToDTO(transactionList);
 		rewardSummaryDTOs.forEach(r -> {
+			if(r.getMonth() == null || r.getYear() == null) {
+				throw new ResourceNotFoundException("Resource not found ");
+			}
 			CustomerRewards customerRewards = rewardRepository.findCustomerRewardPonts(r.getCustomerId(),
 					r.getMonth().trim(), r.getYear().toString());
 			if (customerRewards != null) {

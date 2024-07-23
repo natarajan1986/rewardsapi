@@ -9,6 +9,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -18,6 +19,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.charter.reward.db.dto.Customer;
 import com.charter.reward.service.CustomerService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @WebMvcTest(CustomerController.class)
 @AutoConfigureMockMvc
@@ -33,11 +36,14 @@ public class CustomerControllerTest {
 	public void saveCustomer_thenReturnCustomerWith200Status() throws Exception {
 
 		when(customerService.createCustomerAccount( getCustomer())).thenReturn( getCustomer());
-		MockHttpServletRequestBuilder reqBuilder = MockMvcRequestBuilders.get("/v1/customers");
+		String expectedJson = mapToJson(getCustomer());
+		MockHttpServletRequestBuilder reqBuilder = MockMvcRequestBuilders.post("/v1/customers/register")
+				.contentType(MediaType.APPLICATION_JSON).content(expectedJson);
+		
 		ResultActions perform = mockMvc.perform(reqBuilder);
 		MvcResult mvcResult = perform.andReturn();
 		MockHttpServletResponse response = mvcResult.getResponse();
-		assertThat(response.getStatus()).isEqualTo(HttpStatus.NOT_FOUND.value());
+		assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
 	}
 
 	/**
@@ -52,6 +58,11 @@ public class CustomerControllerTest {
 		customer.setEmail("raja@gmail.com");
 		customer.setPhoneNumber("8056047407");
 		return customer;
+	}
+
+	private String mapToJson(Object object) throws JsonProcessingException {
+		ObjectMapper mapper = new ObjectMapper();
+		return mapper.writeValueAsString(object);
 	}
 
 }

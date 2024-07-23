@@ -6,6 +6,8 @@ import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
@@ -19,11 +21,16 @@ import com.charter.reward.db.entity.CustomerEntity;
 import com.charter.reward.db.entity.CustomerTransaction;
 import com.charter.reward.db.repository.CustomerRepository;
 import com.charter.reward.db.repository.TransactionRepository;
+import com.charter.reward.exception.BadRequestException;
 import com.charter.reward.exception.ResourceNotFoundException;
 import com.charter.reward.mapper.TransactionMapper;
+import com.charter.reward.util.RewardUtil;
 
 @ExtendWith(SpringExtension.class)
 public class TransactionServiceImplTest {
+
+	@Mock
+	private RewardUtil rewardUtil;
 
 	@Mock
 	private TransactionMapper transactionMapper;
@@ -49,6 +56,40 @@ public class TransactionServiceImplTest {
 				.thenReturn(getTransaction());
 		var obj = transactionServiceImpl.createTransaction(transaction);
 		assertThat(obj).isNull();
+
+	}
+
+	@Test
+	void createTransaction_validationError_thenReturnObject() {
+
+		var transaction = getTransaction();
+		var customerEntity = getCustomerEntity();
+
+		transaction.setCustomerId(null);
+		when(customerRepository.findById(1L)).thenReturn(customerEntity);
+		when(transactionRepository.save(getCustomerTransaction())).thenReturn(getCustomerTransaction());
+		when(transactionMapper.mapTransactionEntityToTransaction(getCustomerTransaction()))
+				.thenReturn(getTransaction());
+		assertThrows(BadRequestException.class, () -> {
+			transactionServiceImpl.createTransaction(transaction);
+		});
+
+	}
+
+	@Test
+	void createTransaction_validationError1_thenReturnObject() {
+
+		var transaction = getTransaction();
+		var customerEntity = getCustomerEntity();
+
+		transaction.setAmount(null);
+		when(customerRepository.findById(1L)).thenReturn(customerEntity);
+		when(transactionRepository.save(getCustomerTransaction())).thenReturn(getCustomerTransaction());
+		when(transactionMapper.mapTransactionEntityToTransaction(getCustomerTransaction()))
+				.thenReturn(getTransaction());
+		assertThrows(BadRequestException.class, () -> {
+			transactionServiceImpl.createTransaction(transaction);
+		});
 
 	}
 
@@ -79,6 +120,12 @@ public class TransactionServiceImplTest {
 	}
 
 	@Test
+	void getTransactionsByCustomerId__thenReturn() {
+		when(transactionRepository.findTransactionsByCustomerId(1L)).thenReturn(getCustomerTransactions());
+		transactionServiceImpl.getTransactionsByCustomerId(1L);
+	}
+
+	@Test
 	void getTransactionsByCustomerId__thenThrowException() throws ResourceNotFoundException {
 		when(transactionRepository.findTransactionsByCustomerId(1L)).thenReturn(null);
 		assertThrows(ResourceNotFoundException.class, () -> {
@@ -96,6 +143,17 @@ public class TransactionServiceImplTest {
 
 	}
 
+	@Test
+	void getAllTransactions__thenReturns(){
+		when(transactionRepository.findAll()).thenReturn(getCustomerTransactions());
+		transactionServiceImpl.getAllTransactions();
+	}
+
+	@Test
+	void deleteTransactions__thenReturns() {
+		transactionServiceImpl.deleteTransactionById(1L);
+	}
+
 	/**
 	 * 
 	 * @return
@@ -108,6 +166,22 @@ public class TransactionServiceImplTest {
 		customerEntity.get().setEmail("raja@gmail.com");
 		customerEntity.get().setPhoneNumber("8056047407");
 		return customerEntity;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	private List<CustomerTransaction> getCustomerTransactions() {
+		List<CustomerTransaction> customerTransactions = new ArrayList<>();
+		CustomerTransaction tx = new CustomerTransaction();
+		tx.setId(1L);
+		tx.setAmount(BigDecimal.valueOf(60.00));
+		tx.setRewardPoints(10);
+		tx.setTransactionDate(LocalDateTime.now());
+		tx.setCustomerId(1L);
+		customerTransactions.add(tx);
+		return customerTransactions;
 	}
 
 	/**

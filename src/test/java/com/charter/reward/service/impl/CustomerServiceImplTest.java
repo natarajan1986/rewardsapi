@@ -52,6 +52,18 @@ public class CustomerServiceImplTest {
 		});
 	}
 
+	@Test
+	void saveCustomer_whenSavingCustomerPasswordNull_thenThrowException() throws BadRequestException {
+
+		var customer = getCustomer();
+		var customerEntity = getCustomerEntity();
+		customer.setPassword(null);
+		when(customerMapper.mapCustomerToCustomerEntity(customer)).thenReturn(customerEntity);
+		assertThrows(BadRequestException.class, () -> {
+			customerServiceImpl.createCustomerAccount(customer);
+		});
+	}
+	
 	/**
 	 * 
 	 * @return Customer
