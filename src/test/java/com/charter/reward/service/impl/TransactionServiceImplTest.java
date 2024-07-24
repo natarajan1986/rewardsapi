@@ -1,6 +1,7 @@
 package com.charter.reward.service.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
@@ -54,9 +55,10 @@ public class TransactionServiceImplTest {
 		when(transactionRepository.save(getCustomerTransaction())).thenReturn(getCustomerTransaction());
 		when(transactionMapper.mapTransactionEntityToTransaction(getCustomerTransaction()))
 				.thenReturn(getTransaction());
+		when(testTransactionServiceImpl.createTransaction(getTransaction())).thenReturn(getTransaction());
 		var result = testTransactionServiceImpl.createTransaction(transaction);
-		assertThat(result).isNull();
-//		verify(transactionRepository);
+		assertThat(result).isNotNull();
+		assertEquals(result.getComments(), "fees");
 	}
 
 	@Test
@@ -104,9 +106,10 @@ public class TransactionServiceImplTest {
 		when(transactionRepository.save(getCustomerTransaction())).thenReturn(getCustomerTransaction());
 		when(transactionMapper.mapTransactionEntityToTransaction(getCustomerTransaction()))
 				.thenReturn(getTransaction());
-		var obj = testTransactionServiceImpl.updateTransaction(transaction);
-		assertThat(obj).isNull();
-//		verify(transactionRepository);
+		when(testTransactionServiceImpl.updateTransaction(getTransaction())).thenReturn(getTransaction());
+		var result = testTransactionServiceImpl.updateTransaction(transaction);
+		assertThat(result).isNotNull();
+		assertEquals(result.getComments(), "fees");
 	}
 
 	@Test
@@ -122,7 +125,8 @@ public class TransactionServiceImplTest {
 	@Test
 	void getTransactionsByCustomerId__thenReturn() {
 		when(transactionRepository.findTransactionsByCustomerId(1L)).thenReturn(getCustomerTransactions());
-		testTransactionServiceImpl.getTransactionsByCustomerId(1L);
+		var result=testTransactionServiceImpl.getTransactionsByCustomerId(1L);
+		assertEquals(result.size(),1);
 	}
 
 	@Test
@@ -146,7 +150,8 @@ public class TransactionServiceImplTest {
 	@Test
 	void getAllTransactions__thenReturns(){
 		when(transactionRepository.findAll()).thenReturn(getCustomerTransactions());
-		testTransactionServiceImpl.getAllTransactions();
+		var result=testTransactionServiceImpl.getAllTransactions();
+		assertEquals(result.size(),1);
 	}
 
 	@Test
@@ -188,13 +193,47 @@ public class TransactionServiceImplTest {
 	 * 
 	 * @return
 	 */
+	private List<Transaction> getTransactions() {
+		List<Transaction> customerTransactions = new ArrayList<>();
+		Transaction tx = new Transaction();
+		tx.setId(1L);
+		tx.setAmount(BigDecimal.valueOf(60.00));
+		tx.setRewardPoints(10);
+		tx.setTransactionDate(LocalDateTime.now());
+		tx.setCustomerId(1L);
+		tx.setComments("fees");
+		customerTransactions.add(tx);
+		return customerTransactions;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
 	private CustomerTransaction getCustomerTransaction() {
 		CustomerTransaction tx = new CustomerTransaction();
 		tx.setId(1L);
 		tx.setAmount(BigDecimal.valueOf(60.00));
 		tx.setRewardPoints(10);
 		tx.setTransactionDate(LocalDateTime.now());
+		tx.setComments("fees");
+//		tx.setCustomerId(1L);
+		tx.setCustomer(getCustomerEntity().get());
+		return tx;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	private Transaction getTransaction() {
+		Transaction tx = new Transaction();
+		tx.setId(1L);
+		tx.setAmount(BigDecimal.valueOf(60.00));
+		tx.setRewardPoints(10);
+		tx.setTransactionDate(LocalDateTime.now());
 		tx.setCustomerId(1L);
+		tx.setComments("fees");
 		return tx;
 	}
 
@@ -212,17 +251,4 @@ public class TransactionServiceImplTest {
 		return tx;
 	}
 
-	/**
-	 * 
-	 * @return
-	 */
-	private Transaction getTransaction() {
-		Transaction tx = new Transaction();
-		tx.setId(1L);
-		tx.setAmount(BigDecimal.valueOf(60.00));
-		tx.setRewardPoints(10);
-		tx.setTransactionDate(LocalDateTime.now());
-		tx.setCustomerId(1L);
-		return tx;
-	}
 }

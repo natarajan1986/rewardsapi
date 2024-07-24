@@ -1,6 +1,7 @@
 package com.charter.reward.service.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.verify;
@@ -56,8 +57,9 @@ public class RewardServiceImplTest {
 		when(rewardMapper.mapCustomerRewardsToCustomerRewardsEntity(getAllCustomerRewards().get(0)))
 				.thenReturn(getAllRewardPointsDTOs().get(0));
 
-		var obj = rewardServiceImpl.getAllRewardPoints();
-		assertThat(obj).isNotNull();
+		var result = rewardServiceImpl.getAllRewardPoints();
+		assertThat(result).isNotNull();
+		assertEquals(result.size(), 1);
 		verify(rewardRepository, atLeastOnce()).findAll();
 
 	}
@@ -88,6 +90,7 @@ public class RewardServiceImplTest {
 		when(rewardRepository.findRewardPointsByCustomerId(1L)).thenReturn(customerRewards);
 		var result = rewardServiceImpl.getAllRewardPointsByCustomer(1L);
 		assertThat(result).isNotNull();
+		assertEquals(result.size(), 1);
 		verify(rewardRepository);
 	}
 
