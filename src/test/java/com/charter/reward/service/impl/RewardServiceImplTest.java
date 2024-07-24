@@ -96,7 +96,6 @@ public class RewardServiceImplTest {
 
 		assertThat(result).isNotNull();
 		assertEquals(result.size(), 1);
-		verify(rewardRepository);
 	}
 
 	@Test

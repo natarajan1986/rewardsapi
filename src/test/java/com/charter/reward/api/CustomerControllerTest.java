@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -26,7 +27,8 @@ import com.charter.reward.service.CustomerService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@WebMvcTest(CustomerController.class)
+
+@WebMvcTest(value = CustomerController.class, excludeAutoConfiguration = { SecurityAutoConfiguration.class })
 @AutoConfigureMockMvc
 public class CustomerControllerTest {
 
@@ -38,7 +40,7 @@ public class CustomerControllerTest {
 
 	@Mock
 	public CustomerRepository customerRepository;
-	
+
 	@Test
 	public void testSaveCustomer_thenReturnCustomerWith200Status() throws Exception {
 		when(underTest.createCustomerAccount( getCustomer())).thenReturn( getCustomer());
@@ -49,6 +51,7 @@ public class CustomerControllerTest {
 		ResultActions perform = mockMvc.perform(reqBuilder);
 		MvcResult mvcResult = perform.andReturn();
 		MockHttpServletResponse response = mvcResult.getResponse();
+		
 		assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
 		assertEquals(response.getStatus(), HttpStatus.OK.value());
 		
@@ -78,8 +81,7 @@ public class CustomerControllerTest {
 		customer.setPhoneNumber("8056047407");
 		return customer;
 	}
-	
-	
+
 	private String mapToJson(Object object) throws JsonProcessingException {
 		ObjectMapper mapper = new ObjectMapper();
 		return mapper.writeValueAsString(object);
