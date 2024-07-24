@@ -46,7 +46,7 @@ public class TransactionServiceImplTest {
 	TransactionServiceImpl underTest;
 
 	@Test
-	void testCreateTransaction_thenReturnObject() {
+	void testCreateTransactionShouldReturnObject() {
 
 		var transaction = getTransaction();
 		var customerEntity = getCustomerEntity();
@@ -56,19 +56,19 @@ public class TransactionServiceImplTest {
 		when(transactionMapper.mapTransactionEntityToTransaction(getCustomerTransaction()))
 				.thenReturn(getTransaction());
 		when(underTest.createTransaction(getTransaction())).thenReturn(getTransaction());
-		
+
 		var result = underTest.createTransaction(transaction);
-		
+
 		assertThat(result).isNotNull();
 		assertEquals(result.getComments(), "fees");
 	}
 
 	@Test
-	void testCreateTransaction_validationError_thenReturnObject() {
+	void testCreateTransactionValidationErrorShouldReturnObject() {
 		var transaction = getTransaction();
 		var customerEntity = getCustomerEntity();
 		transaction.setCustomerId(null);
-		
+
 		when(customerRepository.findById(1L)).thenReturn(customerEntity);
 		when(transactionRepository.save(getCustomerTransaction())).thenReturn(getCustomerTransaction());
 		when(transactionMapper.mapTransactionEntityToTransaction(getCustomerTransaction()))
@@ -81,7 +81,7 @@ public class TransactionServiceImplTest {
 	}
 
 	@Test
-	void testCreateTransaction_validationError1_thenReturnObject() {
+	void testCreateTransactionValidationError1ShouldReturnObject() {
 		var transaction = getTransaction();
 		var customerEntity = getCustomerEntity();
 		transaction.setAmount(null);
@@ -98,7 +98,7 @@ public class TransactionServiceImplTest {
 	}
 
 	@Test
-	void testUpdateTransaction_thenReturnObject() {
+	void testUpdateTransactionShouldReturnObject() {
 		var transaction = getTransaction();
 		var customerEntity = getCustomerEntity();
 
@@ -116,7 +116,7 @@ public class TransactionServiceImplTest {
 	}
 
 	@Test
-	void testGetTransactionById__thenThrowException() throws ResourceNotFoundException {
+	void testGetTransactionByIdShouldThrowException() throws ResourceNotFoundException {
 		Optional<CustomerTransaction> tx = Optional.empty();
 		when(transactionRepository.findById(1L)).thenReturn(tx);
 
@@ -126,16 +126,20 @@ public class TransactionServiceImplTest {
 	}
 
 	@Test
-	void testGetTransactionsByCustomerId__thenReturn() {
-		when(transactionRepository.findTransactionsByCustomerId(1L)).thenReturn(getCustomerTransactions());
-		
-		var result=underTest.getTransactionsByCustomerId(1L);
-		
-		assertEquals(result.size(),1);
+	void testGetTransactionsByCustomerIdShouldReturn() {
+		var customerTransactions = getCustomerTransactions();
+		var transaction = getTransactions();
+		when(transactionRepository.findTransactionsByCustomerId(1L)).thenReturn(customerTransactions);
+		when(transactionMapper.mapTransactionEntityToTransaction(customerTransactions.get(0)))
+				.thenReturn(transaction.get(0));
+		var result = underTest.getTransactionsByCustomerId(1L);
+
+		assertEquals(result.size(), 1);
+		assertEquals(result, transaction);
 	}
 
 	@Test
-	void testGetTransactionsByCustomerId__thenThrowException() throws ResourceNotFoundException {
+	void testGetTransactionsByCustomerIdShouldThrowException() throws ResourceNotFoundException {
 		when(transactionRepository.findTransactionsByCustomerId(1L)).thenReturn(null);
 		
 		assertThrows(ResourceNotFoundException.class, () -> {
@@ -145,7 +149,7 @@ public class TransactionServiceImplTest {
 	}
 
 	@Test
-	void testGetAllTransactions__thenThrowException() throws ResourceNotFoundException {
+	void testGetAllTransactionsShouldThrowException() throws ResourceNotFoundException {
 		when(transactionRepository.findAll()).thenReturn(null);
 		
 		assertThrows(ResourceNotFoundException.class, () -> {
@@ -155,14 +159,22 @@ public class TransactionServiceImplTest {
 	}
 
 	@Test
-	void testGetAllTransactions__thenReturns(){
-		when(transactionRepository.findAll()).thenReturn(getCustomerTransactions());
-		var result=underTest.getAllTransactions();
-		assertEquals(result.size(),1);
+	void testGetAllTransactionsShouldReturns() {
+		var customerTransactions = getCustomerTransactions();
+		var transaction = getTransactions();
+
+		when(transactionRepository.findAll()).thenReturn(customerTransactions);
+		when(transactionMapper.mapTransactionEntityToTransaction(customerTransactions.get(0)))
+				.thenReturn(transaction.get(0));
+
+		var result = underTest.getAllTransactions();
+
+		assertEquals(result.size(), 1);
+		assertEquals(result, transaction);
 	}
 
 	@Test
-	void testDeleteTransactions__thenReturns() {
+	void testDeleteTransactionsShouldDelete() {
 		underTest.deleteTransactionById(1L);
 	}
 
@@ -224,7 +236,6 @@ public class TransactionServiceImplTest {
 		tx.setRewardPoints(10);
 		tx.setTransactionDate(LocalDateTime.now());
 		tx.setComments("fees");
-//		tx.setCustomerId(1L);
 		tx.setCustomer(getCustomerEntity().get());
 		return tx;
 	}

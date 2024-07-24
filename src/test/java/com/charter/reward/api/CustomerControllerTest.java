@@ -42,7 +42,7 @@ public class CustomerControllerTest {
 	public CustomerRepository customerRepository;
 
 	@Test
-	public void testSaveCustomer_thenReturnCustomerWith200Status() throws Exception {
+	public void testSaveCustomerShouldReturnCustomerWith200Status() throws Exception {
 		when(underTest.createCustomerAccount( getCustomer())).thenReturn( getCustomer());
 		String expectedJson = mapToJson(getCustomer());
 		MockHttpServletRequestBuilder reqBuilder = MockMvcRequestBuilders.post("/v1/customers/register")

@@ -30,21 +30,21 @@ public class CustomerServiceImplTest {
 	public CustomerRepository customerRepository;
 
 	@Test
-	void testSaveCustomer_whenSavingCustomer_thenReturnObject() {
+	void testSaveCustomerWhenSavingCustomerShouldReturnObject() {
 		var customer = getCustomer();
 		var customerEntity = getCustomerEntity();
 
 		when(customerMapper.mapCustomerToCustomerEntity(customer)).thenReturn(customerEntity);
 		when(underTest.createCustomerAccount(customer)).thenReturn(customer);
 
-		var obj = underTest.createCustomerAccount(getCustomer());
+		var result = underTest.createCustomerAccount(getCustomer());
 
-		assertThat(obj).isNotNull();
-		assertEquals(obj, customer);
+		assertThat(result).isNotNull();
+		assertEquals(result, customer);
 	}
 
 	@Test
-	void testSaveCustomer_whenSavingCustomer_thenThrowException() throws BadRequestException {
+	void testSaveCustomerWhenSavingCustomerShouldThrowException() throws BadRequestException {
 		var customer = getCustomer();
 		var customerEntity = getCustomerEntity();
 		
@@ -57,7 +57,7 @@ public class CustomerServiceImplTest {
 	}
 
 	@Test
-	void testSaveCustomer_whenSavingCustomerPasswordNull_thenThrowException() throws BadRequestException {
+	void testSaveCustomerWhenSavingCustomerPasswordNullShouldThrowException() throws BadRequestException {
 		var customer = getCustomer();
 		var customerEntity = getCustomerEntity();
 		customer.setPassword(null);

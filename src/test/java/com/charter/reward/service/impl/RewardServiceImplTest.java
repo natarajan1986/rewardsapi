@@ -78,7 +78,7 @@ public class RewardServiceImplTest {
 	}
 
 	@Test
-	void testGetAllRewardPointsByCustomer_thenReturnException() {
+	void testGetAllRewardPointsByCustomerShouldReturnException() {
 		when(rewardRepository.findRewardPointsByCustomerId(1L)).thenReturn(null);
 		
 		assertThrows(ResourceNotFoundException.class, () -> {
@@ -88,37 +88,43 @@ public class RewardServiceImplTest {
 	}
 
 	@Test
-	void testGetAllRewardPointsByCustomer_thenReturnObject() {
+	void testGetAllRewardPointsByCustomerShouldReturnObject() {
 		var customerRewards = getAllCustomerRewards();
+		var customerRewardPointsDTOs = getAllRewardPointsDTOs();
 		when(rewardRepository.findRewardPointsByCustomerId(1L)).thenReturn(customerRewards);
-
+		when(rewardMapper.mapCustomerRewardsToCustomerRewardsEntity(customerRewards.get(0)))
+		.thenReturn(customerRewardPointsDTOs.get(0));
 		var result = underTest.getAllRewardPointsByCustomer(1L);
 
 		assertThat(result).isNotNull();
 		assertEquals(result.size(), 1);
+		assertEquals(result, customerRewardPointsDTOs);
 	}
 
 	@Test
-	void testUpdateCustomerRewardsSummary_whenUpdateCustomerRewards_thenThrowException() throws ResourceNotFoundException {
+	void testUpdateCustomerRewardsSummaryWhenUpdateCustomerRewardsShouldThrowException() throws ResourceNotFoundException {
 		when(transactionRepository.findCustomerRewardSummary()).thenReturn(null);
+		
 		assertThrows(ResourceNotFoundException.class, () -> {
 			underTest.updateCustomerRewardsSummary();
 		});
 	}
 
 	@Test
-	void testSaveCustomerRewardsSummary_whenSaveCustomerRewards_thenThrowException() throws ResourceNotFoundException {
+	void testSaveCustomerRewardsSummaryWhenSaveCustomerRewardsShouldThrowException() throws ResourceNotFoundException {
 		when(customerRepository.findById(1L)).thenReturn(Optional.of( getCustomerEntity()));
 		when(transactionRepository.findCustomerRewardSummary()).thenReturn(null);
+		
 		assertThrows(ResourceNotFoundException.class, () -> {
 			underTest.updateCustomerRewardsSummary();
 		});
 	}
 
 	@Test
-	void testSaveCustomerRewardsSummary_whenSaveCustomerRewards_thenReturns() throws ResourceNotFoundException {
+	void testSaveCustomerRewardsSummaryWhenSaveCustomerRewardsShouldReturns() throws ResourceNotFoundException {
 		when(customerRepository.findById(1L)).thenReturn(Optional.of( getCustomerEntity()));
 		when(transactionRepository.findCustomerRewardSummary()).thenReturn(getCustomerEntityTuples());
+		
 		assertThrows(ResourceNotFoundException.class, () -> {
 			underTest.updateCustomerRewardsSummary();
 		});
@@ -130,11 +136,9 @@ public class RewardServiceImplTest {
 	 */
 	private List<Tuple> getCustomerEntityTuples() {
 		Tuple mockedTuple = Mockito.mock(Tuple.class);
-
-		List<Tuple> accountObj = new ArrayList<>();
-
-		accountObj.add(mockedTuple);
-		return accountObj;
+		List<Tuple> CustomerEntityObj = new ArrayList<>();
+		CustomerEntityObj.add(mockedTuple);
+		return CustomerEntityObj;
 
 	}
 

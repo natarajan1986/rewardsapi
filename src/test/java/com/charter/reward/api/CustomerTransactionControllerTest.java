@@ -40,7 +40,7 @@ public class CustomerTransactionControllerTest {
 	MockMvc mockMvc;
 
 	@Test
-	public void testSaveTransaction_thenReturnCustomerWith200Status() throws Exception  {
+	public void testSaveTransactionShouldReturnCustomerWith200Status() throws Exception  {
 		when(underTest.createTransaction( getTransaction())).thenReturn( getTransaction());
 		String expectedJson = mapToJson(getTransaction());
 		MockHttpServletRequestBuilder reqBuilder = MockMvcRequestBuilders.post("/v1/transactions")
@@ -56,7 +56,7 @@ public class CustomerTransactionControllerTest {
 	}
 
 	@Test
-	public void testUpdateTransaction_thenReturnTransactionWith200Status() throws Exception  {
+	public void testUpdateTransactionShouldReturnTransactionWith200Status() throws Exception  {
 		when(underTest.updateTransaction( getTransaction())).thenReturn( getTransaction());
 		String expectedJson = mapToJson(getTransaction());
 		MockHttpServletRequestBuilder reqBuilder = MockMvcRequestBuilders.put("/v1/transactions")
@@ -71,7 +71,7 @@ public class CustomerTransactionControllerTest {
 	}
 
 	@Test
-	public void testGetTransactionById_thenReturnTransactionWith200Status() throws Exception  {
+	public void testGetTransactionByIdShouldReturnTransactionWith200Status() throws Exception  {
 		when(underTest.getTransactionById(1L)).thenReturn( getTransaction());
 		MockHttpServletRequestBuilder reqBuilder = MockMvcRequestBuilders.get("/v1/transactions/1");
 		
@@ -84,7 +84,7 @@ public class CustomerTransactionControllerTest {
 	}
 
 	@Test
-	public void testGetTransactionsByCustomerId_thenReturnTransactionWith200Status() throws Exception  {
+	public void testGetTransactionsByCustomerIdShouldReturnTransactionWith200Status() throws Exception  {
 		when(underTest.getTransactionsByCustomerId(1L)).thenReturn( getTransactions());
 		MockHttpServletRequestBuilder reqBuilder = MockMvcRequestBuilders.get("/v1/transactions/transaction-list/1");
 		
@@ -97,7 +97,7 @@ public class CustomerTransactionControllerTest {
 	}
 
 	@Test
-	public void testGetAllTransactions_thenReturnTransactionWith200Status() throws Exception  {
+	public void testGetAllTransactionsShouldReturnTransactionWith200Status() throws Exception  {
 
 		when(underTest.getAllTransactions()).thenReturn( getTransactions());
 		MockHttpServletRequestBuilder reqBuilder = MockMvcRequestBuilders.get("/v1/transactions");
@@ -111,7 +111,7 @@ public class CustomerTransactionControllerTest {
 	}
 
 	@Test
-	public void testDeleteTransaction_thenReturnTransactionWith200Status() throws Exception  {
+	public void testDeleteTransactionShouldReturnTransactionWith200Status() throws Exception  {
 		when(underTest.deleteTransactionById(1L)).thenReturn(ApplicationConstants.TRANSACTION_DELETED_SUCCESS);
 		MockHttpServletRequestBuilder reqBuilder = MockMvcRequestBuilders.delete("/v1/transactions/1");
 		ResultActions perform = mockMvc.perform(reqBuilder);

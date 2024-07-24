@@ -39,7 +39,7 @@ public class RewardsControllerTest {
 	MockMvc mockMvc;
 
 	@Test
-	public void testGetAllRewardPointsSummary_thenReturnRewardPointsDTOsWith200Status() throws Exception  {
+	public void testGetAllRewardPointsSummaryShouldReturnRewardPointsDTOsWith200Status() throws Exception  {
 		when(underTest.getAllRewardPoints()).thenReturn( getAllRewardPointsDTOs());
 		MockHttpServletRequestBuilder reqBuilder = MockMvcRequestBuilders.get("/v1/reward-points");
 		
@@ -53,7 +53,7 @@ public class RewardsControllerTest {
 	}
 	
 	@Test
-	public void testGetAllRewardPointsByCustomerId_thenReturnRewardPointsDTOsWith200Status() throws Exception  {
+	public void testGetAllRewardPointsByCustomerIdShouldReturnRewardPointsDTOsWith200Status() throws Exception  {
 
 		when(underTest.getAllRewardPointsByCustomer(1L)).thenReturn( getAllRewardPointsDTOs());
 		MockHttpServletRequestBuilder reqBuilder = MockMvcRequestBuilders.get("/v1/reward-points/1");
@@ -69,7 +69,7 @@ public class RewardsControllerTest {
 	
 
 	@Test
-	public void testGetAllRewardPointsSummaryByCustomerId_thenReturnRewardPointsDTOsWith200Status() throws Exception  {
+	public void testGetAllRewardPointsSummaryByCustomerIdShouldReturnRewardPointsDTOsWith200Status() throws Exception  {
 		when(underTest.getAllRewardPointsByCustomer(1L)).thenReturn( getAllRewardPointsDTOs());
 		MockHttpServletRequestBuilder reqBuilder = MockMvcRequestBuilders.get("/v1/reward-points");
 		ResultActions perform = mockMvc.perform(reqBuilder);
@@ -83,7 +83,7 @@ public class RewardsControllerTest {
 	}
 
 	@Test
-	public void testUpdateCustomerRewardsSummary_thenReturnRewardPointsDTOsWith200Status() throws Exception  {
+	public void testUpdateCustomerRewardsSummaryShouldReturnRewardPointsDTOsWith200Status() throws Exception  {
 		when(underTest.updateCustomerRewardsSummary()).thenReturn(getAllRewardSummaryPointsDTOs());
 		String expectedJson = mapToJson(getAllRewardSummaryPointsDTOs());
 		MockHttpServletRequestBuilder reqBuilder = MockMvcRequestBuilders.put("/v1/reward-points/customer-rewards-summary")
