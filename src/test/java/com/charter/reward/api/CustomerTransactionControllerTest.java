@@ -33,88 +33,94 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class CustomerTransactionControllerTest {
 
 	@MockBean
-	private TransactionService transactionService;
+	private TransactionService underTest;
 
 	@Autowired
 	MockMvc mockMvc;
 
 	@Test
-	public void saveTransaction_thenReturnCustomerWith200Status() throws Exception  {
-
-		when(transactionService.createTransaction( getTransaction())).thenReturn( getTransaction());
+	public void testSaveTransaction_thenReturnCustomerWith200Status() throws Exception  {
+		when(underTest.createTransaction( getTransaction())).thenReturn( getTransaction());
 		String expectedJson = mapToJson(getTransaction());
 		MockHttpServletRequestBuilder reqBuilder = MockMvcRequestBuilders.post("/v1/transactions")
 				.contentType(MediaType.APPLICATION_JSON).content(expectedJson);
+		
 		ResultActions perform = mockMvc.perform(reqBuilder);
+		
 		MvcResult mvcResult = perform.andReturn();
 		MockHttpServletResponse response = mvcResult.getResponse();
+		
 		assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
 		assertEquals(response.getStatus(), HttpStatus.OK.value());
 	}
 
 	@Test
-	public void updateTransaction_thenReturnTransactionWith200Status() throws Exception  {
-
-		when(transactionService.updateTransaction( getTransaction())).thenReturn( getTransaction());
+	public void testUpdateTransaction_thenReturnTransactionWith200Status() throws Exception  {
+		when(underTest.updateTransaction( getTransaction())).thenReturn( getTransaction());
 		String expectedJson = mapToJson(getTransaction());
 		MockHttpServletRequestBuilder reqBuilder = MockMvcRequestBuilders.put("/v1/transactions")
 				.contentType(MediaType.APPLICATION_JSON).content(expectedJson);
+		
 		ResultActions perform = mockMvc.perform(reqBuilder);
 		MvcResult mvcResult = perform.andReturn();
 		MockHttpServletResponse response = mvcResult.getResponse();
+		
 		assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
 		assertEquals(response.getStatus(), HttpStatus.OK.value());
 	}
 
 	@Test
-	public void getTransactionById_thenReturnTransactionWith200Status() throws Exception  {
-
-		when(transactionService.getTransactionById(1L)).thenReturn( getTransaction());
+	public void testGetTransactionById_thenReturnTransactionWith200Status() throws Exception  {
+		when(underTest.getTransactionById(1L)).thenReturn( getTransaction());
 		MockHttpServletRequestBuilder reqBuilder = MockMvcRequestBuilders.get("/v1/transactions/1");
+		
 		ResultActions perform = mockMvc.perform(reqBuilder);
 		MvcResult mvcResult = perform.andReturn();
 		MockHttpServletResponse response = mvcResult.getResponse();
-		assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
-		assertEquals(response.getStatus(), HttpStatus.OK.value());
-	}
-
-	@Test
-	public void getTransactionsByCustomerId_thenReturnTransactionWith200Status() throws Exception  {
-
-		when(transactionService.getTransactionsByCustomerId(1L)).thenReturn( getTransactions());
-		MockHttpServletRequestBuilder reqBuilder = MockMvcRequestBuilders.get("/v1/transactions/transaction-list/1");
-		ResultActions perform = mockMvc.perform(reqBuilder);
-		MvcResult mvcResult = perform.andReturn();
-		MockHttpServletResponse response = mvcResult.getResponse();
-		assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
-		assertEquals(response.getStatus(), HttpStatus.OK.value());
-	}
-
-	@Test
-	public void getAllTransactions_thenReturnTransactionWith200Status() throws Exception  {
-
-		when(transactionService.getAllTransactions()).thenReturn( getTransactions());
-		MockHttpServletRequestBuilder reqBuilder = MockMvcRequestBuilders.get("/v1/transactions");
-		ResultActions perform = mockMvc.perform(reqBuilder);
-		MvcResult mvcResult = perform.andReturn();
-		MockHttpServletResponse response = mvcResult.getResponse();
-		assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
-		assertEquals(response.getStatus(), HttpStatus.OK.value());
-	}
 	
-	@Test
-	public void deleteTransaction_thenReturnTransactionWith200Status() throws Exception  {
+		assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+		assertEquals(response.getStatus(), HttpStatus.OK.value());
+	}
 
-		when(transactionService.deleteTransactionById(1L)).thenReturn(ApplicationConstants.TRANSACTION_DELETED_SUCCESS);
+	@Test
+	public void testGetTransactionsByCustomerId_thenReturnTransactionWith200Status() throws Exception  {
+		when(underTest.getTransactionsByCustomerId(1L)).thenReturn( getTransactions());
+		MockHttpServletRequestBuilder reqBuilder = MockMvcRequestBuilders.get("/v1/transactions/transaction-list/1");
+		
+		ResultActions perform = mockMvc.perform(reqBuilder);
+		MvcResult mvcResult = perform.andReturn();
+		MockHttpServletResponse response = mvcResult.getResponse();
+		
+		assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+		assertEquals(response.getStatus(), HttpStatus.OK.value());
+	}
+
+	@Test
+	public void testGetAllTransactions_thenReturnTransactionWith200Status() throws Exception  {
+
+		when(underTest.getAllTransactions()).thenReturn( getTransactions());
+		MockHttpServletRequestBuilder reqBuilder = MockMvcRequestBuilders.get("/v1/transactions");
+		
+		ResultActions perform = mockMvc.perform(reqBuilder);
+		MvcResult mvcResult = perform.andReturn();
+		MockHttpServletResponse response = mvcResult.getResponse();
+		
+		assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+		assertEquals(response.getStatus(), HttpStatus.OK.value());
+	}
+
+	@Test
+	public void testDeleteTransaction_thenReturnTransactionWith200Status() throws Exception  {
+		when(underTest.deleteTransactionById(1L)).thenReturn(ApplicationConstants.TRANSACTION_DELETED_SUCCESS);
 		MockHttpServletRequestBuilder reqBuilder = MockMvcRequestBuilders.delete("/v1/transactions/1");
 		ResultActions perform = mockMvc.perform(reqBuilder);
 		MvcResult mvcResult = perform.andReturn();
 		MockHttpServletResponse response = mvcResult.getResponse();
+		
 		assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
 		assertEquals(response.getStatus(), HttpStatus.OK.value());
 	}
-	
-	
+
 	private String mapToJson(Object object) throws JsonProcessingException {
 		ObjectMapper mapper = new ObjectMapper();
 		return mapper.writeValueAsString(object);

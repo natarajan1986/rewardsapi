@@ -31,7 +31,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class CustomerControllerTest {
 
 	@MockBean
-	private CustomerService testCustomerService;
+	private CustomerService underTest;
 
 	@Autowired
 	MockMvc mockMvc;
@@ -40,9 +40,8 @@ public class CustomerControllerTest {
 	public CustomerRepository customerRepository;
 	
 	@Test
-	public void saveCustomer_thenReturnCustomerWith200Status() throws Exception {
-
-		when(testCustomerService.createCustomerAccount( getCustomer())).thenReturn( getCustomer());
+	public void testSaveCustomer_thenReturnCustomerWith200Status() throws Exception {
+		when(underTest.createCustomerAccount( getCustomer())).thenReturn( getCustomer());
 		String expectedJson = mapToJson(getCustomer());
 		MockHttpServletRequestBuilder reqBuilder = MockMvcRequestBuilders.post("/v1/customers/register")
 				.contentType(MediaType.APPLICATION_JSON).content(expectedJson);

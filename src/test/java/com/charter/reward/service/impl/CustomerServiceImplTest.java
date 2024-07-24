@@ -21,7 +21,7 @@ import com.charter.reward.mapper.CustomerMapper;
 public class CustomerServiceImplTest {
 
 	@InjectMocks
-	CustomerServiceImpl customerServiceImpl;
+	CustomerServiceImpl underTest;
 
 	@Mock
 	CustomerMapper customerMapper;
@@ -30,42 +30,45 @@ public class CustomerServiceImplTest {
 	public CustomerRepository customerRepository;
 
 	@Test
-	void saveCustomer_whenSavingCustomer_thenReturnObject() {
-
+	void testSaveCustomer_whenSavingCustomer_thenReturnObject() {
 		var customer = getCustomer();
 		var customerEntity = getCustomerEntity();
-		when(customerMapper.mapCustomerToCustomerEntity(customer)).thenReturn(customerEntity);
-		when(customerServiceImpl.createCustomerAccount(customer)).thenReturn(customer);
-		var obj = customerServiceImpl.createCustomerAccount(getCustomer());
-		assertThat(obj).isNotNull();
-		assertEquals(obj.getEmail(),"raja@gmail.com");
 
+		when(customerMapper.mapCustomerToCustomerEntity(customer)).thenReturn(customerEntity);
+		when(underTest.createCustomerAccount(customer)).thenReturn(customer);
+
+		var obj = underTest.createCustomerAccount(getCustomer());
+
+		assertThat(obj).isNotNull();
+		assertEquals(obj, customer);
 	}
 
 	@Test
-	void saveCustomer_whenSavingCustomer_thenThrowException() throws BadRequestException {
-
+	void testSaveCustomer_whenSavingCustomer_thenThrowException() throws BadRequestException {
 		var customer = getCustomer();
 		var customerEntity = getCustomerEntity();
+		
 		customer.setUsername(null);
+		
 		when(customerMapper.mapCustomerToCustomerEntity(customer)).thenReturn(customerEntity);
 		assertThrows(BadRequestException.class, () -> {
-			customerServiceImpl.createCustomerAccount(customer);
+			underTest.createCustomerAccount(customer);
 		});
 	}
 
 	@Test
-	void saveCustomer_whenSavingCustomerPasswordNull_thenThrowException() throws BadRequestException {
-
+	void testSaveCustomer_whenSavingCustomerPasswordNull_thenThrowException() throws BadRequestException {
 		var customer = getCustomer();
 		var customerEntity = getCustomerEntity();
 		customer.setPassword(null);
+		
 		when(customerMapper.mapCustomerToCustomerEntity(customer)).thenReturn(customerEntity);
+		
 		assertThrows(BadRequestException.class, () -> {
-			customerServiceImpl.createCustomerAccount(customer);
+			underTest.createCustomerAccount(customer);
 		});
 	}
-	
+
 	/**
 	 * 
 	 * @return Customer

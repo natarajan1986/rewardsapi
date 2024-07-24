@@ -32,56 +32,64 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @AutoConfigureMockMvc
 public class RewardsControllerTest {
 	@MockBean
-	private RewardService rewardService;
+	private RewardService underTest;
 
 	@Autowired
 	MockMvc mockMvc;
 
 	@Test
-	public void getAllRewardPointsSummary_thenReturnRewardPointsDTOsWith200Status() throws Exception  {
-
-		when(rewardService.getAllRewardPoints()).thenReturn( getAllRewardPointsDTOs());
+	public void testGetAllRewardPointsSummary_thenReturnRewardPointsDTOsWith200Status() throws Exception  {
+		when(underTest.getAllRewardPoints()).thenReturn( getAllRewardPointsDTOs());
 		MockHttpServletRequestBuilder reqBuilder = MockMvcRequestBuilders.get("/v1/reward-points");
+		
 		ResultActions perform = mockMvc.perform(reqBuilder);
+		
 		MvcResult mvcResult = perform.andReturn();
 		MockHttpServletResponse response = mvcResult.getResponse();
+		
 		assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
 		assertEquals(response.getStatus(), HttpStatus.OK.value());
 	}
 	
 	@Test
-	public void getAllRewardPointsByCustomerId_thenReturnRewardPointsDTOsWith200Status() throws Exception  {
+	public void testGetAllRewardPointsByCustomerId_thenReturnRewardPointsDTOsWith200Status() throws Exception  {
 
-		when(rewardService.getAllRewardPointsByCustomer(1L)).thenReturn( getAllRewardPointsDTOs());
+		when(underTest.getAllRewardPointsByCustomer(1L)).thenReturn( getAllRewardPointsDTOs());
 		MockHttpServletRequestBuilder reqBuilder = MockMvcRequestBuilders.get("/v1/reward-points/1");
+		
 		ResultActions perform = mockMvc.perform(reqBuilder);
+	
 		MvcResult mvcResult = perform.andReturn();
 		MockHttpServletResponse response = mvcResult.getResponse();
+		
 		assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
 		assertEquals(response.getStatus(), HttpStatus.OK.value());
 	}
 	
 
 	@Test
-	public void getAllRewardPointsSummaryByCustomerId_thenReturnRewardPointsDTOsWith200Status() throws Exception  {
-
-		when(rewardService.getAllRewardPointsByCustomer(1L)).thenReturn( getAllRewardPointsDTOs());
+	public void testGetAllRewardPointsSummaryByCustomerId_thenReturnRewardPointsDTOsWith200Status() throws Exception  {
+		when(underTest.getAllRewardPointsByCustomer(1L)).thenReturn( getAllRewardPointsDTOs());
 		MockHttpServletRequestBuilder reqBuilder = MockMvcRequestBuilders.get("/v1/reward-points");
 		ResultActions perform = mockMvc.perform(reqBuilder);
+		
 		MvcResult mvcResult = perform.andReturn();
+		
 		MockHttpServletResponse response = mvcResult.getResponse();
+		
 		assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
 		assertEquals(response.getStatus(), HttpStatus.OK.value());
 	}
 
 	@Test
-	public void updateCustomerRewardsSummary_thenReturnRewardPointsDTOsWith200Status() throws Exception  {
-
-		when(rewardService.updateCustomerRewardsSummary()).thenReturn(getAllRewardSummaryPointsDTOs());
+	public void testUpdateCustomerRewardsSummary_thenReturnRewardPointsDTOsWith200Status() throws Exception  {
+		when(underTest.updateCustomerRewardsSummary()).thenReturn(getAllRewardSummaryPointsDTOs());
 		String expectedJson = mapToJson(getAllRewardSummaryPointsDTOs());
 		MockHttpServletRequestBuilder reqBuilder = MockMvcRequestBuilders.put("/v1/reward-points/customer-rewards-summary")
 				.contentType(MediaType.APPLICATION_JSON).content(expectedJson);
+		
 		ResultActions perform = mockMvc.perform(reqBuilder);
+		
 		MvcResult mvcResult = perform.andReturn();
 		MockHttpServletResponse response = mvcResult.getResponse();
 		assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());

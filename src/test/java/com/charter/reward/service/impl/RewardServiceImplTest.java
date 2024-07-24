@@ -38,7 +38,7 @@ public class RewardServiceImplTest {
 	private CustomerRewardMapper rewardMapper;
 
 	@InjectMocks
-	RewardServiceImpl rewardServiceImpl;
+	public RewardServiceImpl underTest;
 
 	@Mock
 	public TransactionRepository transactionRepository;
@@ -50,73 +50,78 @@ public class RewardServiceImplTest {
 	public CustomerRepository customerRepository;
 
 	@Test
-	void getAllRewardPoints_thenReturnObject() {
-
+	void testGetAllRewardPointsShouldReturnObject() {
 		var customerRewards = getAllCustomerRewards();
-		when(rewardRepository.findAll()).thenReturn(customerRewards);
-		when(rewardMapper.mapCustomerRewardsToCustomerRewardsEntity(getAllCustomerRewards().get(0)))
-				.thenReturn(getAllRewardPointsDTOs().get(0));
+		var customerRewardPointsDTOs = getAllRewardPointsDTOs();
 
-		var result = rewardServiceImpl.getAllRewardPoints();
+		when(rewardRepository.findAll()).thenReturn(customerRewards);
+		when(rewardMapper.mapCustomerRewardsToCustomerRewardsEntity(customerRewards.get(0)))
+				.thenReturn(customerRewardPointsDTOs.get(0));
+
+		var result = underTest.getAllRewardPoints();
+
 		assertThat(result).isNotNull();
 		assertEquals(result.size(), 1);
+		assertEquals(result, customerRewardPointsDTOs);
 		verify(rewardRepository, atLeastOnce()).findAll();
 
 	}
 
 	@Test
-	void getAllRewardPoints_thenReturnException() {
-
+	void testGetAllRewardPointsShouldThrowException() {
 		when(rewardRepository.findAll()).thenReturn(null);
+		
 		assertThrows(ResourceNotFoundException.class, () -> {
-			rewardServiceImpl.getAllRewardPoints();
+			underTest.getAllRewardPoints();
 		});
 
 	}
 
 	@Test
-	void getAllRewardPointsByCustomer_thenReturnException() {
-	
+	void testGetAllRewardPointsByCustomer_thenReturnException() {
 		when(rewardRepository.findRewardPointsByCustomerId(1L)).thenReturn(null);
+		
 		assertThrows(ResourceNotFoundException.class, () -> {
-			rewardServiceImpl.getAllRewardPointsByCustomer(1L);
+			underTest.getAllRewardPointsByCustomer(1L);
 		});
 
 	}
 
 	@Test
-	void getAllRewardPointsByCustomer_thenReturnObject() {
+	void testGetAllRewardPointsByCustomer_thenReturnObject() {
 		var customerRewards = getAllCustomerRewards();
 		when(rewardRepository.findRewardPointsByCustomerId(1L)).thenReturn(customerRewards);
-		var result = rewardServiceImpl.getAllRewardPointsByCustomer(1L);
+
+		var result = underTest.getAllRewardPointsByCustomer(1L);
+
 		assertThat(result).isNotNull();
 		assertEquals(result.size(), 1);
 		verify(rewardRepository);
 	}
 
 	@Test
-	void updateCustomerRewardsSummary_whenUpdateCustomerRewards_thenThrowException() throws ResourceNotFoundException {
+	void testUpdateCustomerRewardsSummary_whenUpdateCustomerRewards_thenThrowException() throws ResourceNotFoundException {
 		when(transactionRepository.findCustomerRewardSummary()).thenReturn(null);
 		assertThrows(ResourceNotFoundException.class, () -> {
-			rewardServiceImpl.updateCustomerRewardsSummary();
+			underTest.updateCustomerRewardsSummary();
 		});
 	}
 
 	@Test
-	void saveCustomerRewardsSummary_whenSaveCustomerRewards_thenThrowException() throws ResourceNotFoundException {
+	void testSaveCustomerRewardsSummary_whenSaveCustomerRewards_thenThrowException() throws ResourceNotFoundException {
 		when(customerRepository.findById(1L)).thenReturn(Optional.of( getCustomerEntity()));
 		when(transactionRepository.findCustomerRewardSummary()).thenReturn(null);
 		assertThrows(ResourceNotFoundException.class, () -> {
-			rewardServiceImpl.updateCustomerRewardsSummary();
+			underTest.updateCustomerRewardsSummary();
 		});
 	}
 
 	@Test
-	void saveCustomerRewardsSummary_whenSaveCustomerRewards_thenReturns() throws ResourceNotFoundException {
+	void testSaveCustomerRewardsSummary_whenSaveCustomerRewards_thenReturns() throws ResourceNotFoundException {
 		when(customerRepository.findById(1L)).thenReturn(Optional.of( getCustomerEntity()));
 		when(transactionRepository.findCustomerRewardSummary()).thenReturn(getCustomerEntityTuples());
 		assertThrows(ResourceNotFoundException.class, () -> {
-			rewardServiceImpl.updateCustomerRewardsSummary();
+			underTest.updateCustomerRewardsSummary();
 		});
 	}
 
